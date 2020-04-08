@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">NewsScraper</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="naver_api_client_id">9Cprq0u3TcGE89sfyFOt</string>
+    <string name="naver_api_client_secret">0B0ei_EsyW</string>
+</resources>

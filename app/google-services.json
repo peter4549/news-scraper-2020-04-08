@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "937483755490",
+    "firebase_url": "https://news-scraper-e4605.firebaseio.com",
+    "project_id": "news-scraper-e4605",
+    "storage_bucket": "news-scraper-e4605.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937483755490:android:ddec0563f2769ecd5563bb",
+        "android_client_info": {
+          "package_name": "com.zion.newsscraper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937483755490-krjpf94pa8n2pgieckqucr949hnvbrrj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh1ASqA28LZXGZk0epD9lFcTf1Abz0R_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937483755490-krjpf94pa8n2pgieckqucr949hnvbrrj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
