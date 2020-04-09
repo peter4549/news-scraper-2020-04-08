@@ -4,12 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="#ffffff">
+
+    <ImageView
+        android:id="@+id/image_view_login"
+        android:layout_width="wrap_content"
+        android:layout_height="256dp"
+        android:src="@drawable/news_scraper_logo_1920"
+        android:layout_marginTop="128dp"/>
 
     <TextView
+        android:id="@+id/text_view_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hi"/>
+        android:text="뉴스를 검색하고 스크랩하세요!"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/image_view_login" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  로그인하고 시작하기  "
+        android:layout_below="@id/text_view_login"
+        android:layout_marginTop="24dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:background="@color/colorAccent"/>
 
 
 </RelativeLayout>

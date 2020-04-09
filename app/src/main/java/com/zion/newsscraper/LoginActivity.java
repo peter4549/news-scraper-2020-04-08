@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -24,8 +26,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        createSignInIntent();
+        findViewById(R.id.button_login).setOnClickListener(onClickListener);
     }
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.button_login:
+                    createSignInIntent();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -49,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setLogo(R.drawable.news_scraper_logo_1920)
+                        .setTheme(R.style.NoActionBar)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -72,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...
-                createSignInIntent();
+                // createSignInIntent();
             }
         }
     }

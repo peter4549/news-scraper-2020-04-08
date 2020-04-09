@@ -17,9 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ScrapedNewsAdapter extends RecyclerView.Adapter<ScrapedNewsAdapter.RecyclerViewHolder> {
     private final static String TAG = "FireStoreUpdate";
@@ -27,6 +36,7 @@ public class ScrapedNewsAdapter extends RecyclerView.Adapter<ScrapedNewsAdapter.
     @SuppressLint("StaticFieldLeak")
     private static View classView;
     private int position;
+    private static MenuItem.OnMenuItemClickListener menuItemClickListener;
 
     private void setPosition(int position) {
         this.position = position;
@@ -69,27 +79,7 @@ public class ScrapedNewsAdapter extends RecyclerView.Adapter<ScrapedNewsAdapter.
             scrap.setOnMenuItemClickListener(menuItemClickListener);
             openLink.setOnMenuItemClickListener(menuItemClickListener);
         }
-
-        private final MenuItem.OnMenuItemClickListener menuItemClickListener = new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case 1003:
-
-                        break;
-                    case 1004:
-                        String url = newsDataList.get(getAdapterPosition()).getOriginalLink();
-                        Intent intent = new Intent(classView.getContext(), WebViewActivity.class);
-                        intent.putExtra("url", url);
-                        classView.getContext().startActivity(intent);
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            }
-        };
-    };
+    }
 
     @NonNull
     @Override
@@ -100,7 +90,7 @@ public class ScrapedNewsAdapter extends RecyclerView.Adapter<ScrapedNewsAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ScrapedNewsAdapter.RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ScrapedNewsAdapter.RecyclerViewHolder holder, final int position) {
         NewsData newsData = newsDataList.get(position);
         holder.textViewTitle.setText(newsData.getTitle());
         holder.textViewDescription.setText(newsData.getDescription());
@@ -112,6 +102,29 @@ public class ScrapedNewsAdapter extends RecyclerView.Adapter<ScrapedNewsAdapter.
                 return false;
             }
         });
+
+        menuItemClickListener = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case 1003:
+                        newsDataList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, getItemCount());
+                        deleteNews(position);
+                        break;
+                    case 1004:
+                        String url = newsDataList.get(position).getOriginalLink();
+                        Intent intent = new Intent(classView.getContext(), WebViewActivity.class);
+                        intent.putExtra("url", url);
+                        classView.getContext().startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        };
     }
 
     @Override
@@ -121,5 +134,34 @@ public class ScrapedNewsAdapter extends RecyclerView.Adapter<ScrapedNewsAdapter.
 
     private static void showSnackBar(String text) {
         Snackbar.make(ScrapedNewsActivity.view, text, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private static void deleteNews(int position) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> map = new HashMap<>();
+        if(user != null) {
+            DocumentReference documentReference = db.collection("users").document(user.getUid());
+            {
+                Log.d("deleteNews", "The news was removed.");
+                map.put("scrapedNewsData", newsDataList);
+                documentReference
+                        .set(map)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "The news was successfully removed.");
+                                MainActivity.documentExist = true;
+                                showSnackBar("해당 뉴스가 삭제되었습니다.");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error writing document.", e);
+                            }
+                        });
+            }
+        }
     }
 }

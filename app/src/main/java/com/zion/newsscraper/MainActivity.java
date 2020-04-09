@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -86,14 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchKeyword = query;
-                recyclerView.setVisibility(View.INVISIBLE);
                 getAndDisplayNews();
-                try {
-                    Thread.sleep(128);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                recyclerView.setVisibility(View.VISIBLE);
                 return true;
             }
 
@@ -117,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     private List<NewsData> getNaverNews(String searchWord) {
         String clientId = getString(R.string.naver_api_client_id);
         String clientSecret = getString(R.string.naver_api_client_secret);
-        int display = 20;
+        int display = 40;
         List<NewsData> newsDataList = new ArrayList<>();
 
         try {
@@ -150,7 +142,10 @@ public class MainActivity extends AppCompatActivity {
                 NewsData newsData = new NewsData();
                 newsData.setTitle(jsonObjectItem.getString("title"));
                 newsData.setOriginalLink(jsonObjectItem.getString("originallink"));
-                newsData.setDescription(jsonObjectItem.getString("description"));
+                String description = jsonObjectItem.getString("description");
+                description = description.replaceAll("<b>", "");
+                description = description.replaceAll("</b>", "");
+                newsData.setDescription(description);
                 newsData.setPubDate(jsonObjectItem.getString("pubDate"));
                 newsDataList.add(newsData);
             }
@@ -159,15 +154,16 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-
         return newsDataList;
     }
 
+    /*
     private class RecyclerViewer extends Thread {
         public void start() {
             recyclerView.setAdapter(adapter);
         }
     }
+     */
 
     public void getAndDisplayNews() {
         new NaverNewsGetter().execute();
@@ -178,10 +174,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-        RecyclerViewer recyclerViewer = new RecyclerViewer();
-        recyclerViewer.setDaemon(true);
-        recyclerViewer.start();
+        // RecyclerViewer recyclerViewer = new RecyclerViewer();
+        // recyclerViewer.setDaemon(true);
+        // recyclerViewer.start();
+        recyclerView.setAdapter(adapter);
+        complete = false;
     }
 
     @Override
@@ -215,6 +212,21 @@ public class MainActivity extends AppCompatActivity {
                 builder.create().show();
                 return true;
 
+            case R.id.delete:
+                AlertDialog.Builder builderDelete = new AlertDialog.Builder(MainActivity.this);
+                builderDelete.setTitle("계정 삭제");
+                builderDelete.setMessage("계정을 삭제하시겠습니까?");
+                builderDelete.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteAccount();
+                        scrapedNewsDataList.clear();
+                        documentExist = false;
+                    }
+                });
+                builderDelete.setNegativeButton("아니요", null);
+                builderDelete.create().show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -240,6 +252,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         showToast("계정이 삭제되었습니다.");
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
     }
@@ -290,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
     private List<String> crawlThumbnailUrl(String url) {
         List<String> stringList = new ArrayList<>();
         try {
@@ -306,4 +322,5 @@ public class MainActivity extends AppCompatActivity {
 
         return stringList;
     }
+     */
 }

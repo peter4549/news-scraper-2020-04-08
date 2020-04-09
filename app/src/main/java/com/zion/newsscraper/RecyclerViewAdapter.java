@@ -1,6 +1,5 @@
 package com.zion.newsscraper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -16,8 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -52,7 +49,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     RecyclerViewAdapter(List<NewsData> newsDataList, Context context) {
         RecyclerViewAdapter.newsDataList = newsDataList;
-        Fresco.initialize(context);
     }
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder
@@ -149,7 +145,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if(user != null) {
             DocumentReference documentReference = db.collection("users").document(user.getUid());
             if (!MainActivity.documentExist) {
-                MainActivity.scrapedNewsDataList.add(newsData); // 대체할것..
+                MainActivity.scrapedNewsDataList.add(newsData);
                 Log.d("updateScrapedNews", "Create new document.");
                 map.put("scrapedNewsData", MainActivity.scrapedNewsDataList);
                 documentReference
