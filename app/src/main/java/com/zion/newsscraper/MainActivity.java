@@ -140,11 +140,18 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObjectItem = jsonArray.getJSONObject(i);
                 NewsData newsData = new NewsData();
-                newsData.setTitle(jsonObjectItem.getString("title"));
+                String title = jsonObjectItem.getString("title");
+                title = title.replaceAll("<b>", "");
+                title = title.replaceAll("</b>", "");
+                title = title.replaceAll("&quot;", "\"");
+                title = title.replaceAll("&amp;", "&");
+                newsData.setTitle(title);
                 newsData.setOriginalLink(jsonObjectItem.getString("originallink"));
                 String description = jsonObjectItem.getString("description");
                 description = description.replaceAll("<b>", "");
                 description = description.replaceAll("</b>", "");
+                description = description.replaceAll("&quot;", "\"");
+                title = title.replaceAll("&amp;", "&");
                 newsData.setDescription(description);
                 newsData.setPubDate(jsonObjectItem.getString("pubDate"));
                 newsDataList.add(newsData);

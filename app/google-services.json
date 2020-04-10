@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "937483755490-56b1ntq8s27dk2j8vj6aeljbfh3kldg5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zion.newsscraper",
+            "certificate_hash": "b3bcb6886ff8ff9edc74b36135d7868480e07cde"
+          }
+        },
+        {
+          "client_id": "937483755490-da9kim520evlvif5plpf64j6a6hu8qp2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zion.newsscraper",
+            "certificate_hash": "0eaf0683b2c3b6b2b63f5bc7e1e26e95fced8486"
+          }
+        },
+        {
           "client_id": "937483755490-krjpf94pa8n2pgieckqucr949hnvbrrj.apps.googleusercontent.com",
           "client_type": 3
         }
