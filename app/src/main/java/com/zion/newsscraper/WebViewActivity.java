@@ -1,9 +1,11 @@
 package com.zion.newsscraper;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.security.MessageDigest;
 import java.util.Objects;
 
 public class WebViewActivity extends AppCompatActivity {
@@ -42,15 +45,31 @@ public class WebViewActivity extends AppCompatActivity {
         finish();
     }
 
-    private static class IgnoreSSLErrorWebViewClient extends WebViewClient {
+    private class IgnoreSSLErrorWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url){
             Log.d(TAG, "Loading complete.");
         }
 
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
+        public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(WebViewActivity.this);
+            builder.setMessage("다음 페이지로 이동하시겠습니까?");
+            builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    handler.proceed();
+                }
+            });
+            builder.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    handler.cancel();
+                }
+            });
+            builder.create().show();
+
+
         }
     }
 }
